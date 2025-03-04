@@ -1,0 +1,27 @@
+.wrapper {
+    max-width: 70rem; /* "Componente: sidebar 3:10 - Cálculo*/
+    margin: 2rem auto;
+    padding: 0 1rem;
+
+    display: grid;
+    grid-template-columns: 256px 1fr; /*1fr - tamanho flexível */
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+@media (max-width: 768px){
+    .html{
+        /*  
+        este font-size tem que ser em %.
+        Se quero 16, faço a regra de 3
+        16 -> 100%
+        14 -> ?
+        14*100/16 = 87,5
+        Se colocar em 14px, fica fixo, e usuário não consegue ALT
+        */
+        font-size: 87.5%;
+    }
+    .wrapper{
+        grid-template-columns: 1fr;
+    }
+}
