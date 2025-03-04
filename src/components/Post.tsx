@@ -4,7 +4,9 @@ import { Avatar } from './Avatar';
 import { Comment } from './Comment';
 import styles from './Post.module.css';
 import { ChangeEvent, FormEvent, InvalidEvent, useState } from 'react';
-import { renderIntoDocument } from 'react-dom/test-utils';
+//import { renderIntoDocument } from 'react-dom/test-utils';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
 
 /*
 Informações NEC (que serão transformadas em objetos)
@@ -25,21 +27,26 @@ interface Content {
         content: string;
 }
 
-interface postProps {
+export interface PostType {
+    id: number;
     author: Author;
     publishedAt: Date;
     content: Content[];
 }
 
-export function Post ({author, publishedAt, content}:postProps) {
+interface postProps {
+   post: PostType;
+}
+
+export function Post ({ post }:postProps) {
     //Estudar sobre ESTADO no React
     const [comments, setComments] = useState([
         'Post muito bacana, hein?!'
     ])
     const [newCommentText, setNewCommentText] = useState('')
 
-    const publishedAtDateFormatInFull = format(publishedAt, "d 'de' LLLL 'às' HH':'mm'h'", {locale: ptBR})
-    const publishedAtDateFormatRelativeNow = formatDistanceToNow(publishedAt, {locale:ptBR, addSuffix: true})
+    const publishedAtDateFormatInFull = format(post.publishedAt, "d 'de' LLLL 'às' HH':'mm'h'", {locale: ptBR})
+    const publishedAtDateFormatRelativeNow = formatDistanceToNow(post.publishedAt, {locale:ptBR, addSuffix: true})
     function handleCreateNewComment (event: FormEvent){
         event.preventDefault();
 
@@ -92,19 +99,19 @@ const publishedAtDateFormatInFull = new Intl.DateTimeFormat
         <article className={styles.post}>
             <header>
                 <div className={styles.author}>
-                    <Avatar hasBorder={true} src={author.avatarUrl} />
+                    <Avatar hasBorder={true} src={post.author.avatarUrl} />
                     <div className={styles.authorInfo}>
-                        <strong>{author.name}</strong>
-                        <span>{author.role}</span>
+                        <strong>{post.author.name}</strong>
+                        <span>{post.author.role}</span>
                     </div>
                 </div>
-                <time title={publishedAtDateFormatInFull} dateTime={publishedAt.toISOString()}>
+                <time title={publishedAtDateFormatInFull} dateTime={post.publishedAt.toISOString()}>
                    {publishedAtDateFormatRelativeNow}
                 </time>
             </header>
 
             <div className={styles.content}>
-                {content.map(line => {
+                {post.content.map(line => {
                     if (line.type === 'paragraph'){
                         return <p key={line.content} >{line.content}</p>
                     } else if (line.type === 'link'){
